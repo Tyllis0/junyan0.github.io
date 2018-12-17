@@ -11775,7 +11775,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="DATA608-Final-Project---MTA-Data-Sets">DATA608 Final Project - MTA Data Sets<a class="anchor-link" href="#DATA608-Final-Project---MTA-Data-Sets">&#182;</a></h1>
+<h1 id="DATA608-Final-Project---MTA-Data">DATA608 Final Project - MTA Data<a class="anchor-link" href="#DATA608-Final-Project---MTA-Data">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -11786,29 +11786,8 @@ div#notebook {
 <p>Authors: Jun Yan <br />
 Date: December 19, 2018</p>
 <h2 id="Table-of-Contents:">Table of Contents:<a class="anchor-link" href="#Table-of-Contents:">&#182;</a></h2><ul>
-<li><a href="#Part-I---MTA-Arts">Part I - MTA Arts</a><ul>
-<li><a href="#Data-Acquisition---OHLCV-and-Trend-Index">Data Acquisition - OHLCV and Trend Index</a></li>
-<li><a href="#Establishing-Baseline">Establishing Baseline</a></li>
-<li><a href="#Why-LSTM-Neural-Networks?">Why LSTM Neural Networks?</a></li>
-<li><a href="#Price-Prediction---Regression">Price Prediction - Regression</a></li>
-<li><a href="#Range-Prediction---Classification">Range Prediction - Classification</a></li>
-<li><a href="#Testing-Models-with-New-Data">Testing Models with New Data</a></li>
-</ul>
-</li>
-<li><a href="#Part-II---MTA-Capital-Projects">Part II - MTA Capital Projects</a><ul>
-<li><a href="#Data-Acquisition---Sentiment">Data Acquisition - Sentiment</a></li>
-<li><a href="#Tokenizing">Tokenizing</a></li>
-<li><a href="#Text-Analysis-with-Machine-Learning-Algorithms">Text Analysis with Machine Learning Algorithms</a><ul>
-<li><a href="#Logistic-Regression">Logistic Regression</a></li>
-<li><a href="#Naive-Bayes">Naive Bayes</a></li>
-<li><a href="#Logistic-Regression-on-entire-dataset">Logistic Regression on entire dataset</a></li>
-</ul>
-</li>
-<li><a href="#Sentiment-Influence-on-Bitcoin-Prices">Sentiment Influence on Bitcoin Prices</a></li>
-<li><a href="#Plotting-the-Sentiment-Results">Plotting the Sentiment Results</a></li>
-</ul>
-</li>
-<li><a href="#Summary">Summary</a></li>
+<li><a href="#Part-I---MTA-Arts">Part I - MTA Arts</a></li>
+<li><a href="#Part-II---MTA-Capital-Projects">Part II - MTA Capital Projects</a></li>
 </ul>
 
 </div>
@@ -11818,24 +11797,17 @@ Date: December 19, 2018</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="mta_arts.html">mta_arts</a></p>
-<p><a href="mta_capital_projects.html">mta_capital_projects</a></p>
+<p>The Metropolitan Transportation Authority (MTA) is the largest transit agency in the United States, providing public transportation to an average of 11 million passenger per day in the New York City and surrounding counties. The MTA has established a <a href="http://datamine.mta.info/">API portal</a> to provide feeds to their internal data. Two types of data are provided by this protal: real-time data tracking the live location of all the trains and buses (which power numerous phone apps tracking MTA train and buses), and static data such as train/bus schedules, on-time performance reports, turnstile usage, etc.</p>
+<p>In this project, I mainly focus on two static data provided in the API: the MTA Arts &amp; Design Resources, and the MTA Capital Projects Data. The end products of this project is in the links below:</p>
+<ul>
+<li><p><a href="mta_arts.html">MTA Arts &amp; Design</a></p>
+</li>
+<li><p><a href="mta_capital_projects.html">MTA Capital Projects</a></p>
+</li>
+</ul>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">aaaaaa</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -11849,7 +11821,46 @@ Date: December 19, 2018</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>The <a href="http://web.mta.info/developers/aft.html">MTA Arts &amp; Design Resources</a> is a collection of XML files, of which each file contains the data of MTA arts in a train line. These data include the art titles, authors, description, the stations where the arts are, as well as several file names for the pictures. MTA has a <a href="http://web.mta.info/mta/aft/about/">website</a> for these arts. But the website is not well built and difficult to navigate. In this part of the project, I tried to provide geographical context to the data by putting these arts on a map. This will make it much easier for the audience to navigate the arts and digest the information.                                                                                                                                                                                                                                         To put these data on a map, I needed the GIS information, i.e. latitude and longitude. The XML files contains the station names, but not the latitude and longitude. The MTA data portal has a <a href="http://web.mta.info/developers/data/nyct/subway/Stations.csv">csv file</a> that contains the station latitude and longitude of the stations. However, I found it useless, since the station names in the arts data are not the same in the station data. It must be different people who compiled these two data sets.</p>
+<p>To resolve the problem, I managed to build a <a href="scrapper.ipynb">web scrapper</a> that automatically finds the latitude and longitude of each station in the arts data, by doing the following:</p>
+<ol>
+<li>Perform a Google search of the station name.</li>
+<li>Pick up the link leading to the Wikipedia page for that station.</li>
+<li>Scrap the Wikipedia page to look for the latitude and longitude for the station.</li>
+</ol>
+<p>I was able to get the latitude/longitude for every station on the list this way.</p>
+<p>I used the Python package <a href="https://python-visualization.github.io/folium/">Folium</a> to build the map. Following are the notable features of this map:</p>
+<ul>
+<li>When you hoover the mouse over icon, it shows the picture of the art.</li>
+<li>When you click on the icon, it shows the description, as well as link to MTA’s website for the art.</li>
+<li>On the upper right corner, there is a layer control that can be used to select the arts by MTA sub-agencies.</li>
+</ul>
+<p>In order to generate the icons, I created functions that can generate the HTML codes to create tables as popups, and links to the image as tooltips. Here is the <a href="mta_arts.ipynb">Python code</a> that creates the map.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-II---MTA-Capital-Projects">Part II - MTA Capital Projects<a class="anchor-link" href="#Part-II---MTA-Capital-Projects">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <a href="http://web.mta.info/capitaldashboard/cdbxml/cdbxml.zip">MTA Capital Projects Data</a> is a collection of XML files that contains data for all the MTA planned and on-going capital projects (4,089 projects). Similar to the MTA Arts data, I wanted to show all of these projects on the map, so that it is easier to nagivate among the projects. Unlike the MTA Arts data, web scrapping for the station GIS is not necessary, since one of the files contains the exact latitude and longitude of the project location. I explored several features of Folium below:</p>
+<ul>
+<li>Cluster the icons close to each other when you zoom out the map, and uncluster when you zoom in</li>
+<li>Hoover the mouse over the icon will show a brief description of the project. </li>
+<li>Clicking on the icon shows the complete data for the project.</li>
+<li>On the upper right corner, a layer control that can be used to select the projects according to MTA sub-agencies.</li>
+<li>A mini-map on the lower right corner.</li>
+</ul>
+
 </div>
 </div>
 </div>
