@@ -11788,6 +11788,7 @@ Date: December 19, 2018</p>
 <h2 id="Table-of-Contents:">Table of Contents:<a class="anchor-link" href="#Table-of-Contents:">&#182;</a></h2><ul>
 <li><a href="#Part-I---MTA-Arts">Part I - MTA Arts</a></li>
 <li><a href="#Part-II---MTA-Capital-Projects">Part II - MTA Capital Projects</a></li>
+<li><a href="#Part-III---MTA-Fares-Data">Part III - MTA Fares Data</a></li>
 </ul>
 
 </div>
@@ -11798,11 +11799,13 @@ Date: December 19, 2018</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The Metropolitan Transportation Authority (MTA) is the largest transit agency in the United States, providing public transportation to an average of 11 million passenger per day in the New York City and surrounding counties. The MTA has established a <a href="http://datamine.mta.info/">API portal</a> to provide feeds to their internal data. Two types of data are provided by this protal: real-time data tracking the live location of all the trains and buses (which power numerous phone apps tracking MTA train and buses), and static data such as train/bus schedules, on-time performance reports, turnstile usage, etc.</p>
-<p>In this project, I mainly focus on two static data provided in the API: the MTA Arts &amp; Design Resources, and the MTA Capital Projects Data. The end products of this project is in the links below:</p>
+<p>In this project, I mainly focus on three static data provided in the API: the MTA Arts &amp; Design Resources, the MTA Capital Projects Data and the MTA Fares Data. The end products of this project are in the links below:</p>
 <ul>
 <li><p><a href="mta_arts.html">MTA Arts &amp; Design</a></p>
 </li>
 <li><p><a href="mta_capital_projects.html">MTA Capital Projects</a></p>
+</li>
+<li><p><a href="mta_fares.html">MTA Fares Data</a></p>
 </li>
 </ul>
 
@@ -11835,7 +11838,7 @@ Date: December 19, 2018</p>
 <li>When you click on the icon, it shows the description, as well as link to MTA’s website for the art.</li>
 <li>On the upper right corner, there is a layer control that can be used to select the arts by MTA sub-agencies.</li>
 </ul>
-<p>In order to generate the icons, I created functions that can generate the HTML codes to create tables as popups, and links to the image as tooltips. Here is the <a href="mta_arts.ipynb">Python code</a> that creates the map.</p>
+<p>In order to generate the icons, I created functions that can generate the HTML codes to create tables as popups, and links to the image as tooltips. Here is the <a href="mta_arts.ipynb">Jupyter Notebook</a> that creates the map.</p>
 
 </div>
 </div>
@@ -11860,6 +11863,34 @@ Date: December 19, 2018</p>
 <li>On the upper right corner, a layer control that can be used to select the projects according to MTA sub-agencies.</li>
 <li>A mini-map on the lower right corner.</li>
 </ul>
+<p>Here is the <a href="capitalproject.ipynb">Jupyter Notebook</a> that creates the map.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Part-III---MTA-Fares-Data">Part III - MTA Fares Data<a class="anchor-link" href="#Part-III---MTA-Fares-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <a href="http://web.mta.info/developers/fare.html">MTA Fares Data</a> contains the number of MetroCard swipes made each week entering each station in the NYC Subway, PATH, AirTrain JFK, and Roosevelt Island Tram. The data breaks out the various types of MetroCards into individual columns. In a sense, this data reflects the riderships and types of riders using the stations.</p>
+<p>Again, I wanted to show this on a Folium map. This time, I created a heatmap using the fares date from the week of <a href="http://web.mta.info/developers/data/nyct/fares/fares_181215.csv">December 15, 2018</a>. To create the heatmap, I needed to calculate the weights for the stations, which depends on the total number of MetroCard swips (riders) in the station during that week. I first did a row-sum for the data set, which gave me the total ridership in each station. Then I standardized the total riderships using a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">StandardScaler</a>. The scaler takes the number of riders of a station and subtracts the average of all stations and then divided by the standard deviation (similar to calculating Z-score). The resulting values are mean centered around zero, and scaled by the distances to the mean. I used these as the weights for the stations.</p>
+<p>Another obstacle for this part of the project is that the station GIS information is not included in the data. Unfortunately, I found that the GIS information obtained from Part I of the project cannot be reused for this data, nor is the MTA station csv file - the station names are again spelled or shortern differently. However, the scrapping code used in Part I is still good to use with small modifications. I was able to obtain the latitude and longitude of 494 stations out of 509 stations in the data. I had to filter out the 15 stations that I could not find the GIS on the internet.</p>
+<p>Below are the main Folium features I explored in this part of the project:</p>
+<ul>
+<li>Hoover the mouse over the icon will show a brief description of the station and the total MetroCard swipes (riders)</li>
+<li>Clicking on the station shows a bar chart, breaking down the types of MetroCard swipes (types of riders)</li>
+<li>A search box on the upper left corner that can be used to search for a station name. The map will zoom into a matched station name.</li>
+<li>Mouse position tracker in the lower left corner that shows the latitude and longitude position of the mouse point.</li>
+</ul>
+<p>In order to generate the bar charts, I first created the bar charts using Pandas plotting function. I then encoded the figure as base64, and embeded it in the HTML code. Here is the <a href="fares.ipynb">Jupyter Notebook</a> that creates the map.</p>
 
 </div>
 </div>
